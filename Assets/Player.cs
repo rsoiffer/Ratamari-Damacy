@@ -13,7 +13,13 @@ public class Player : MonoBehaviour
     public float cameraDistance = 2;
     public float cameraSmoothing = .1f;
 
-    private Rigidbody myRigidbody;
+    public float maxGrabMassRatio = .2f;
+    public float totalMass = 1;
+
+    [HideInInspector]
+    public Rigidbody myRigidbody;
+    private SphereCollider myCollider;
+    private float colliderInitialRadius;
     private Vector2 mouseLook;
     private Vector2 smoothV;
     private Vector3 camPos;
@@ -23,20 +29,25 @@ public class Player : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody>();
         myRigidbody.maxAngularVelocity = maxVelocity;
+        myCollider = GetComponent<SphereCollider>();
+        colliderInitialRadius = myCollider.radius;
     }
 
     void FixedUpdate()
     {
         var vertical = Input.GetAxis("Vertical");
-        myRigidbody.AddTorque(vertical * torqueMul * myCamera.right);
+        myRigidbody.AddTorque(vertical * totalMass * totalMass * torqueMul * myCamera.right);
 
         var horizontal = Input.GetAxis("Horizontal");
-        myRigidbody.AddTorque(horizontal * torqueMul * Vector3.Cross(Vector3.up, myCamera.right));
+        myRigidbody.AddTorque(horizontal * totalMass * totalMass * torqueMul * Vector3.Cross(Vector3.up, myCamera.right));
 
         // var angVelProjBad = Vector3.ProjectOnPlane(myRigidbody.angularVelocity, transform.right);
         // myRigidbody.AddTorque(-reorientTorque * angVelProjBad);
         var cross = Vector3.Cross(transform.right, myRigidbody.angularVelocity);
-        myRigidbody.AddTorque(reorientTorque * cross);
+        myRigidbody.AddTorque(reorientTorque * totalMass * totalMass * cross);
+
+        myRigidbody.mass = totalMass;
+        myCollider.radius = colliderInitialRadius * Mathf.Pow(totalMass, .5f);
     }
 
     void Update()
@@ -49,19 +60,21 @@ public class Player : MonoBehaviour
         mouseLook.y = Mathf.Clamp(mouseLook.y, -70, 70);
 
         var rotation = Quaternion.Euler(-mouseLook.y, mouseLook.x, 0);
+        var layers = Physics.DefaultRaycastLayers - (1 << 8);
+        var actualCameraDistance = cameraDistance * Mathf.Pow(totalMass, .5f);
         var dist = Physics.Raycast(transform.position,
-            rotation * -Vector3.forward, out var hit, cameraDistance)
+            rotation * -Vector3.forward, out var hit, actualCameraDistance, layers)
             ? hit.distance
-            : cameraDistance;
+            : actualCameraDistance;
         var goalPos = transform.position;
         camPos = Vector3.SmoothDamp(camPos, goalPos, ref camVel, cameraSmoothing);
 
-        myCamera.position = camPos - dist * (rotation * Vector3.forward);;
+        myCamera.position = camPos - dist * (rotation * Vector3.forward);
         myCamera.rotation = rotation;
 
         if (Input.GetButtonDown("Jump") && OnGround)
         {
-            myRigidbody.AddForce(jumpImpulse * Vector3.up, ForceMode.Impulse);
+            myRigidbody.AddForce(totalMass * jumpImpulse * Vector3.up, ForceMode.Impulse);
         }
     }
 
@@ -70,5 +83,5 @@ public class Player : MonoBehaviour
     }
 
     private bool OnGround => Physics.SphereCast(
-        transform.position, .16f, Vector3.down, out var hit, .1f);
+        transform.position, myCollider.radius, Vector3.down, out var hit, .1f);
 }
