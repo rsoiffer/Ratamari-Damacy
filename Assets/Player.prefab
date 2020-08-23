@@ -149,8 +149,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.01
+  far clip plane: 100
   field of view: 50.813957
   orthographic: 0
   orthographic size: 5
@@ -314,7 +314,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.5
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -335,10 +335,12 @@ MonoBehaviour:
   torqueMul: 0.5
   reorientTorque: -0.05
   maxVelocity: 20
+  jumpImpulse: 5
   sensitivity: 2
   smoothing: 2
-  camera: {fileID: 1244463517363227396}
-  cameraDistance: 1
+  myCamera: {fileID: 1244463517363227396}
+  cameraDistance: 2
+  cameraSmoothing: 0.1
 --- !u!1001 &4315449313160168578
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -360,7 +362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319103773843485002, guid: 0ee7d0384b6e6b5459b8339721df6382, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7319103773843485002, guid: 0ee7d0384b6e6b5459b8339721df6382, type: 3}
       propertyPath: m_LocalRotation.x
@@ -422,7 +424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319103773843485002, guid: 0ee7d0384b6e6b5459b8339721df6382, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7319103773843485002, guid: 0ee7d0384b6e6b5459b8339721df6382, type: 3}
       propertyPath: m_LocalRotation.x

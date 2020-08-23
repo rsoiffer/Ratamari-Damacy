@@ -78083,18 +78083,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7571275902699287600, guid: 5b8853e7ceeff2e448954bf93292ea06, type: 3}
-      propertyPath: torqueMul
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7571275902699287600, guid: 5b8853e7ceeff2e448954bf93292ea06, type: 3}
-      propertyPath: maxVelocity
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7571275902699287600, guid: 5b8853e7ceeff2e448954bf93292ea06, type: 3}
-      propertyPath: reorientTorque
-      value: -0.05
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b8853e7ceeff2e448954bf93292ea06, type: 3}
 --- !u!1001 &5675712536528101869
